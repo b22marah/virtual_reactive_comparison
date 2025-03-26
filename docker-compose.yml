@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  postgres-jdbc:
+    image: postgres:15
+    container_name: postgres_jdbc
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: virtual_threads_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pg_jdbc_data:/var/lib/postgresql/data
+
+  postgres-r2dbc:
+    image: postgres:15
+    container_name: postgres_r2dbc
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: reactive_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+    volumes:
+      - pg_r2dbc_data:/var/lib/postgresql/data
+
+volumes:
+  pg_jdbc_data:
+  pg_r2dbc_data:
