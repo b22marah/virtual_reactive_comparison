@@ -38,21 +38,17 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-test</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>io.projectreactor</groupId>
-			<artifactId>reactor-core</artifactId>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-relational</artifactId>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<scope>runtime</scope>
 		</dependency>
 	</dependencies>
 
@@ -84,44 +80,5 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>jdbc</id>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
-			<dependencies>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-web</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.postgresql</groupId>
-					<artifactId>postgresql</artifactId>
-					<scope>runtime</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-
-		<profile>
-			<id>reactive</id>
-			<dependencies>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-webflux</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.springframework.boot</groupId>
-					<artifactId>spring-boot-starter-data-r2dbc</artifactId>
-				</dependency>
-				<dependency>
-					<groupId>org.postgresql</groupId>
-					<artifactId>r2dbc-postgresql</artifactId>
-					<scope>runtime</scope>
-				</dependency>
-			</dependencies>
-		</profile>
-	</profiles>
 
 </project>
