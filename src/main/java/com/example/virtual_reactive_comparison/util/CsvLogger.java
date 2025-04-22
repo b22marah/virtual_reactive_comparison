@@ -1,13 +1,15 @@
-// CsvLogger.java
 package com.example.virtual_reactive_comparison.util;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class CsvLogger {
     private final String filePath;
+    private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss", Locale.forLanguageTag("sv-SE"));
 
     public CsvLogger(String filePath) {
         this.filePath = filePath;
@@ -20,8 +22,8 @@ public class CsvLogger {
 
     public void log(String testType, int concurrency, long latencyMs, double throughput, double cpuUsage, double heapMemoryMB) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) {
-            writer.printf("%s,%s,%d,%d,%.2f,%.2f,%.2f%n",
-                    LocalDateTime.now(), testType, concurrency, latencyMs, throughput, cpuUsage, heapMemoryMB);
+            writer.printf(Locale.US, "%s,%s,%d,%d,%.2f,%.2f,%.2f%n",
+                    LocalDateTime.now().format(formatter), testType, concurrency, latencyMs, throughput, cpuUsage, heapMemoryMB);
         } catch (IOException e) {
             throw new RuntimeException("Failed to write to CSV", e);
         }
@@ -32,7 +34,7 @@ public class CsvLogger {
         long heapBefore = SystemMetrics.getHeapMemoryUsage();
         long start = System.nanoTime();
 
-        task.run(); // <-- your concurrent fetch/insert logic here
+        task.run();
 
         long end = System.nanoTime();
         double cpuAfter = SystemMetrics.getProcessCpuLoad();
@@ -41,7 +43,7 @@ public class CsvLogger {
         long latencyMs = (end - start) / 1_000_000;
         double throughput = (double) count / (latencyMs / 1000.0);
         double cpuUsage = (cpuBefore + cpuAfter) / 2.0;
-        long heapMemoryMB = (heapBefore + heapAfter) / 2 / (1024 * 1024);
+        double heapMemoryMB = (heapBefore + heapAfter) / 2.0 / 1024;
 
         CsvLogger logger = new CsvLogger(fileName);
         logger.log(testType, count, latencyMs, throughput, cpuUsage, heapMemoryMB);
