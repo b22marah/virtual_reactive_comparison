@@ -26,4 +26,24 @@ public class CsvLogger {
             throw new RuntimeException("Failed to write to CSV", e);
         }
     }
+
+    public static void benchmarkAndLog(String fileName, String testType, int count, Runnable task) {
+        double cpuBefore = SystemMetrics.getProcessCpuLoad();
+        long heapBefore = SystemMetrics.getHeapMemoryUsage();
+        long start = System.nanoTime();
+
+        task.run(); // <-- your concurrent fetch/insert logic here
+
+        long end = System.nanoTime();
+        double cpuAfter = SystemMetrics.getProcessCpuLoad();
+        long heapAfter = SystemMetrics.getHeapMemoryUsage();
+
+        long latencyMs = (end - start) / 1_000_000;
+        double throughput = (double) count / (latencyMs / 1000.0);
+        double cpuUsage = (cpuBefore + cpuAfter) / 2.0;
+        long heapMemoryMB = (heapBefore + heapAfter) / 2 / (1024 * 1024);
+
+        CsvLogger logger = new CsvLogger(fileName);
+        logger.log(testType, count, latencyMs, throughput, cpuUsage, heapMemoryMB);
+    }
 }
