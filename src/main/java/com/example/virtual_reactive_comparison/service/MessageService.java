@@ -24,7 +24,7 @@ public class MessageService {
         return reactiveMessageRepository.save(msg);
     }
 
-    public Flux<ReactiveMessage> findAll() {
+    public Flux<ReactiveMessage> findAllReactive() {
         return reactiveMessageRepository.findAll();
     }
 
@@ -34,5 +34,13 @@ public class MessageService {
                 .then();
 
         return CsvLogger.benchmarkAndLog("benchmark-reactive.csv", "insert", count, insertTask);
+    }
+
+    public Mono<Void> benchmarkFetch(int concurrency) {
+        Mono<Void> fetchTask = Flux.range(0, concurrency)
+                .flatMap(ignored -> findAllReactive())
+                .then();
+
+        return CsvLogger.benchmarkAndLog("benchmark-reactive.csv", "fetch", concurrency, fetchTask);
     }
 }

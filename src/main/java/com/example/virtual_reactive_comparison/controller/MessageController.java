@@ -1,9 +1,7 @@
 package com.example.virtual_reactive_comparison.controller;
 
-import com.example.virtual_reactive_comparison.model.ReactiveMessage;
 import com.example.virtual_reactive_comparison.service.MessageService;
 import org.springframework.web.bind.annotation.*;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -22,4 +20,9 @@ public class MessageController {
                 .thenReturn("Reactive benchmark complete.");
     }
 
+    @GetMapping("/benchmark/fetch")
+    public Mono<String> benchmarkFetch(@RequestParam(defaultValue = "100") int count) {
+        return messageService.benchmarkFetch(count)
+                .thenReturn("Reactive fetch benchmark completed. CSV updated.");
+    }
 }
