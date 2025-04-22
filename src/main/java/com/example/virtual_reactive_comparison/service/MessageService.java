@@ -32,4 +32,14 @@ public class MessageService {
     public Flux<ReactiveMessage> findAllReactive() {
         return reactiveMessageRepository.findAll();
     }
+
+    public Mono<Void> benchmarkInsert(int count) {
+        return Flux.range(0, count)
+                .flatMap(i -> {
+                    ReactiveMessage msg = new ReactiveMessage("Reactive Message " + i, LocalDateTime.now());
+                    return reactiveMessageRepository.save(msg);
+                })
+                .then();
+    }
+
 }

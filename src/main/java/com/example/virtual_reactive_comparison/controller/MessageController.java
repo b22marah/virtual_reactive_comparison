@@ -25,4 +25,11 @@ public class MessageController {
     public Flux<ReactiveMessage> getAllMessages() {
         return messageService.findAllReactive();
     }
+
+    @PostMapping("/benchmark")
+    public Mono<String> benchmarkInsert(@RequestParam(defaultValue = "100") int count) {
+        return messageService.benchmarkInsert(count)
+                .thenReturn("Reactive benchmark complete.");
+    }
+
 }
