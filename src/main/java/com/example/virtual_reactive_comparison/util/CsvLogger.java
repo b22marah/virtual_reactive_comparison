@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class CsvLogger {
     private final String filePath;
@@ -21,9 +21,9 @@ public class CsvLogger {
 
     public void log(String testType, int concurrency, long latencyMs, double throughput, double cpuUsage, double heapMemoryMB) {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath, true))) {
-            writer.printf("%s,%s,%d,%d,%.2f,%.2f,%.2f%n",
-                    LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
-                    testType, concurrency, latencyMs, throughput, cpuUsage, heapMemoryMB);
+            writer.printf(Locale.US, "%s,%s,%d,%d,%.2f,%.2f,%.2f%n",
+                    LocalDateTime.now(), testType, concurrency, latencyMs, throughput, cpuUsage, heapMemoryMB);
+
         } catch (IOException e) {
             throw new RuntimeException("Failed to write to CSV", e);
         }
