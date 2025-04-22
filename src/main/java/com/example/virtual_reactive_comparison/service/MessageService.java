@@ -1,8 +1,9 @@
+// MessageService.java (Reactive branch)
 package com.example.virtual_reactive_comparison.service;
 
 import com.example.virtual_reactive_comparison.model.ReactiveMessage;
 import com.example.virtual_reactive_comparison.repository.ReactiveMessageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.virtual_reactive_comparison.util.CsvLogger;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
@@ -12,34 +13,26 @@ import java.time.LocalDateTime;
 @Service
 public class MessageService {
 
-    @Autowired(required = false)
-    private ReactiveMessageRepository reactiveMessageRepository;
+    private final ReactiveMessageRepository reactiveMessageRepository;
 
-    public Mono<Void> insertMessagesReactive(int count) {
-        return Flux.range(0, count)
-                .flatMap(i -> {
-                    ReactiveMessage msg = new ReactiveMessage("Reactive Message " + i, LocalDateTime.now());
-                    return reactiveMessageRepository.save(msg);
-                })
-                .then();
+    public MessageService(ReactiveMessageRepository reactiveMessageRepository) {
+        this.reactiveMessageRepository = reactiveMessageRepository;
     }
 
-    public Mono<ReactiveMessage> saveReactive(String text) {
+    public Mono<ReactiveMessage> save(String text) {
         ReactiveMessage msg = new ReactiveMessage(text, LocalDateTime.now());
         return reactiveMessageRepository.save(msg);
     }
 
-    public Flux<ReactiveMessage> findAllReactive() {
+    public Flux<ReactiveMessage> findAll() {
         return reactiveMessageRepository.findAll();
     }
 
     public Mono<Void> benchmarkInsert(int count) {
-        return Flux.range(0, count)
-                .flatMap(i -> {
-                    ReactiveMessage msg = new ReactiveMessage("Reactive Message " + i, LocalDateTime.now());
-                    return reactiveMessageRepository.save(msg);
-                })
+        Mono<Void> insertTask = Flux.range(0, count)
+                .flatMap(i -> save("Reactive Message " + i))
                 .then();
-    }
 
+        return CsvLogger.benchmarkAndLog("benchmark-reactive.csv", "insert", count, insertTask);
+    }
 }

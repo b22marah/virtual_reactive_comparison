@@ -16,16 +16,6 @@ public class MessageController {
         this.messageService = messageService;
     }
 
-    @PostMapping("/create")
-    public Mono<ReactiveMessage> createMessage(@RequestBody String text) {
-        return messageService.saveReactive(text);
-    }
-
-    @GetMapping
-    public Flux<ReactiveMessage> getAllMessages() {
-        return messageService.findAllReactive();
-    }
-
     @PostMapping("/benchmark")
     public Mono<String> benchmarkInsert(@RequestParam(defaultValue = "100") int count) {
         return messageService.benchmarkInsert(count)
