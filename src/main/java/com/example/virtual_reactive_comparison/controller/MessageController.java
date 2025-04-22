@@ -35,4 +35,9 @@ public class MessageController {
         return ResponseEntity.ok("Benchmark complete.");
     }
 
+    @GetMapping("/benchmark/fetch")
+    public ResponseEntity<String> benchmarkFetch(@RequestParam(defaultValue = "100") int count) {
+        messageService.benchmarkFetch(count);
+        return ResponseEntity.ok("Fetch benchmark completed. CSV updated.");
+    }
 }
