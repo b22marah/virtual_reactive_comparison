@@ -19,11 +19,20 @@ public class MessageController {
 
     @PostMapping("/create")
     public ResponseEntity<Message> createMessage(@RequestBody String text) {
+        System.out.println("Handling request on thread: " + Thread.currentThread());
         return ResponseEntity.ok(messageService.save(text));
     }
 
     @GetMapping
     public ResponseEntity<List<Message>> getAllMessages() {
+        System.out.println("Handling request on thread: " + Thread.currentThread());
         return ResponseEntity.ok(messageService.findAll());
     }
+
+    @PostMapping("/benchmark")
+    public ResponseEntity<String> benchmarkInsert(@RequestParam(defaultValue = "100") int count) {
+        messageService.benchmarkInsert(count);
+        return ResponseEntity.ok("Benchmark complete.");
+    }
+
 }
