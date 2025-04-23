@@ -28,6 +28,10 @@ public class MessageService {
         return reactiveMessageRepository.findAll();
     }
 
+    public Mono<Void> clearAll() {
+        return reactiveMessageRepository.deleteAll();
+    }
+
     public Mono<Void> benchmarkInsert(int count) {
         Mono<Void> insertTask = Flux.range(0, count)
                 .flatMap(i -> save("Reactive Message " + i))

@@ -1,7 +1,9 @@
 package com.example.virtual_reactive_comparison.controller;
 
+import com.example.virtual_reactive_comparison.model.ReactiveMessage;
 import com.example.virtual_reactive_comparison.service.MessageService;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @RestController
@@ -24,5 +26,16 @@ public class MessageController {
     public Mono<String> benchmarkFetch(@RequestParam(defaultValue = "100") int count) {
         return messageService.benchmarkFetch(count)
                 .thenReturn("Reactive fetch benchmark completed. CSV updated.");
+    }
+
+    @DeleteMapping("/clear")
+    public Mono<String> clearAllMessages() {
+        return messageService.clearAll()
+                .thenReturn("All reactive messages deleted.");
+    }
+
+    @GetMapping("/view-all")
+    public Flux<ReactiveMessage> viewAllMessages() {
+        return messageService.findAllReactive();
     }
 }
