@@ -1,8 +1,11 @@
 package com.example.virtual_reactive_comparison.controller;
 
+import com.example.virtual_reactive_comparison.model.Message;
 import com.example.virtual_reactive_comparison.service.MessageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/messages")
@@ -24,5 +27,16 @@ public class MessageController {
     public ResponseEntity<String> benchmarkFetch(@RequestParam(defaultValue = "100") int count) {
         messageService.benchmarkFetch(count);
         return ResponseEntity.ok("Fetch benchmark completed. CSV updated.");
+    }
+
+    @GetMapping("/view-all")
+    public ResponseEntity<List<Message>> viewAllMessages() {
+        return ResponseEntity.ok(messageService.findAll());
+    }
+
+    @DeleteMapping("/clear")
+    public ResponseEntity<String> clearAllMessages() {
+        messageService.clearAll();
+        return ResponseEntity.ok("All messages deleted.");
     }
 }

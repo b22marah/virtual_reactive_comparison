@@ -29,6 +29,10 @@ public class MessageService {
         return messageRepository.findAll();
     }
 
+    public void clearAll() {
+        messageRepository.deleteAll();
+    }
+
     public void benchmarkInsert(int count) {
         CsvLogger.benchmarkAndLog("benchmark-jdbc.csv", "insert", count, () -> {
             try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
